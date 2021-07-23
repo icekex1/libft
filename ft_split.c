@@ -6,12 +6,12 @@
 /*   By: tzeck <tzeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/12 18:40:16 by tzeck             #+#    #+#             */
-/*   Updated: 2021/07/23 11:55:11 by tzeck            ###   ########.fr       */
+/*   Updated: 2021/07/23 16:42:08 by tzeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-
+​
 static int	delimiter(char to_check, char c)
 {
 	if (to_check == c || to_check == '\0')
@@ -19,12 +19,12 @@ static int	delimiter(char to_check, char c)
 	else
 		return (0);
 }
-
+​
 static int	string_count(char const *s, char c)
 {
 	int	i;
 	int	words;
-
+​
 	i = 0;
 	words = 0;
 	while (s[i])
@@ -35,11 +35,11 @@ static int	string_count(char const *s, char c)
 	}
 	return (words);
 }
-
+​
 static int	free_array(char **arr, int arr_index)
 {
 	int	tmp;
-
+​
 	if (arr[arr_index] == NULL)
 	{
 		while (arr_index >= 0)
@@ -55,13 +55,13 @@ static int	free_array(char **arr, int arr_index)
 	}
 	return (0);
 }
-
+​
 static int	write_words(char **arr, char const *s, char c)
 {
 	int	i;
 	int	j;
 	int	arr_index;
-
+​
 	i = 0;
 	arr_index = 0;
 	while (s[i])
@@ -84,12 +84,12 @@ static int	write_words(char **arr, char const *s, char c)
 	arr[arr_index] = NULL;
 	return (0);
 }
-
+​
 char	**ft_split(char const *s, char c)
 {
 	char	**arr;
 	int		b;
-
+​
 	if (s == NULL)
 		return (NULL);
 	arr = (char **)malloc((string_count(s, c) + 1) * sizeof(char *));
