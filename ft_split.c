@@ -5,98 +5,79 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tzeck <tzeck@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/12 18:40:16 by tzeck             #+#    #+#             */
-/*   Updated: 2021/07/23 16:42:08 by tzeck            ###   ########.fr       */
+/*   Created: 2021/07/23 17:01:43 by tzeck             #+#    #+#             */
+/*   Updated: 2021/07/23 17:14:41 by tzeck            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-​
-static int	delimiter(char to_check, char c)
+
+static int	delimiter(const char *s, char c, int i)
 {
-	if (to_check == c || to_check == '\0')
-		return (1);
-	else
-		return (0);
+	while (s[i] != c && s[i])
+		i++;
+	return (i);
 }
-​
-static int	string_count(char const *s, char c)
+
+static int	string_count(const char *s, char c)
 {
+	int	str_nbr;
 	int	i;
-	int	words;
-​
+
+	if (!s[0])
+		return (0);
+	str_nbr = 0;
 	i = 0;
-	words = 0;
+	while (s[i] && s[i] == c)
+		i++;
 	while (s[i])
 	{
-		if (delimiter(s[i], c) == 0 && delimiter(s[i + 1], c) == 1)
-			words++;
+		if (s[i] == c)
+		{
+			str_nbr++;
+			while (s[i] && s[i] == c)
+				i++;
+			continue ;
+		}
 		i++;
 	}
-	return (words);
+	if (s[i - 1] != c)
+		str_nbr++;
+	return (str_nbr);
 }
-​
-static int	free_array(char **arr, int arr_index)
+
+static void	write_words(const char *s, char c, char **mainstr, unsigned int b)
 {
-	int	tmp;
-​
-	if (arr[arr_index] == NULL)
-	{
-		while (arr_index >= 0)
-		{
-			tmp = arr_index;
-			free(arr[arr_index]);
-			arr[arr_index] = NULL;
-			arr_index = tmp - 1;
-		}
-		free (arr);
-		arr = NULL;
-		return (1);
-	}
-	return (0);
-}
-​
-static int	write_words(char **arr, char const *s, char c)
-{
-	int	i;
-	int	j;
-	int	arr_index;
-​
+	unsigned int	a;
+	unsigned int	i;
+	size_t			z;
+
 	i = 0;
-	arr_index = 0;
-	while (s[i])
+	a = 0;
+	z = 0;
+	while (a < b)
 	{
-		while (delimiter(s[i], c) == 1 && s[i])
+		i = z + i;
+		while (s[i] && s[i] == c)
 			i++;
-		j = 0;
-		while (delimiter(s[i + j], c) == 0 && s[i + j])
-			j++;
-		arr[arr_index] = (char *)malloc((j + 1) * sizeof(char));
-		if (free_array(arr, arr_index) == 1)
-			return (1);
-		j = 0;
-		while (delimiter(s[i], c) == 0 && s[i])
-			arr[arr_index][j++] = s[i++];
-		arr[arr_index][j] = '\0';
-		if (delimiter(s[i - 1], c) == 0)
-			arr_index++;
+		z = delimiter(s, c, i) - i;
+		mainstr[a] = (char *)ft_substr(s, i, z);
+		a++;
 	}
-	arr[arr_index] = NULL;
-	return (0);
+	mainstr[a] = NULL;
 }
-​
-char	**ft_split(char const *s, char c)
+
+char	**ft_split(const char *s, char c)
 {
-	char	**arr;
-	int		b;
-​
-	if (s == NULL)
-		return (NULL);
-	arr = (char **)malloc((string_count(s, c) + 1) * sizeof(char *));
-	if (arr == NULL)
-		return (NULL);
-	b = write_words(arr, s, c);
-	if (b == 1)
-		return (NULL);
-	return (arr);
+	char			**mainstr;
+	unsigned int	b;
+
+	if (!s)
+		return (0);
+	b = string_count(s, c);
+	mainstr = (char **)malloc(b * sizeof(char *) + 1 * sizeof(char *));
+	if (mainstr == '\0')
+		return (0);
+	write_words(s, c, mainstr, b);
+	return (mainstr);
 }
